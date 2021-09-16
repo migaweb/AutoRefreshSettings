@@ -1,0 +1,31 @@
+﻿@page "/fetchdata"
+@using AutoRefreshSettings.Shared
+@inject HttpClient Http
+
+<h1>Auto refresh settings at runtime</h1>
+
+<p>Using each of IOptions, IOptionsSnapshot and IOptionsMonitor</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+<div>
+    Option: @(forecasts.First().OptionSettings.Test) <br /><br />
+    Snap: @(forecasts.First().OptionSnapshotSettings.Test) <br /><br />
+    Monitor: @(forecasts.First().OptionMonitorSettings.Test) <br /><br />
+</div>
+    
+}
+
+@code {
+    private WeatherForecast[] forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+    }
+
+}
